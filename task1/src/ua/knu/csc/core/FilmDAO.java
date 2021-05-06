@@ -48,7 +48,7 @@ public class FilmDAO {
     }
 
     public Film getFilm(int filmId) throws SQLException {
-        String sql = "SELECT title, country " +
+        String sql = "SELECT title, country, year " +
                 "FROM film " +
                 "WHERE film_id = " + filmId + ";";
 
