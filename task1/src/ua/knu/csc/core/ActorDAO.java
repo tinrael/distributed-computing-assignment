@@ -38,7 +38,7 @@ public class ActorDAO {
     }
 
     public void deleteActor(int actorId) throws SQLException {
-        String sql = "DELETE FROM actor WHERE actor_id = '" + actorId + "';";
+        String sql = "DELETE FROM actor WHERE actor_id = " + actorId + ";";
 
         int rowsAffectedCount = statement.executeUpdate(sql);
 
