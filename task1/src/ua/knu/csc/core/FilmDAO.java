@@ -18,16 +18,16 @@ public class FilmDAO {
         connection.close();
     }
 
-    public void addFilm(int filmId, String title, String country) throws SQLException {
+    public void addFilm(int filmId, String title, String country, int year) throws SQLException {
         String sql = "INSERT INTO film VALUES " +
-                "(" + filmId + ", '" + title + "', '" + country + "');";
+                "(" + filmId + ", '" + title + "', '" + country + "', " + year + ");";
 
         statement.executeUpdate(sql);
     }
 
-    public void updateFilm(int filmId, String title, String country) throws SQLException {
+    public void updateFilm(int filmId, String title, String country, int year) throws SQLException {
         String sql = "UPDATE film " +
-                "SET title = '" + title + "', country = '" + country + "' " +
+                "SET title = '" + title + "', country = '" + country + "', year = " + year + " " +
                 "WHERE film_id = " + filmId + ";";
 
         int rowsAffectedCount = statement.executeUpdate(sql);
@@ -60,6 +60,7 @@ public class FilmDAO {
             film.setFilmId(filmId);
             film.setTitle(resultSet.getString("title"));
             film.setCountry(resultSet.getString("country"));
+            film.setYear(resultSet.getInt("year"));
 
             return film;
         } else {
