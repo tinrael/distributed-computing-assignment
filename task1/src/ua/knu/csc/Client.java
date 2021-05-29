@@ -15,7 +15,9 @@ public class Client {
 
     public Client(String ip, int port) throws IOException {
         socket = new Socket(ip, port);
+    }
 
+    public void initialize() throws IOException {
         bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         printWriter = new PrintWriter(socket.getOutputStream(), true);
     }
@@ -29,15 +31,21 @@ public class Client {
         String response = bufferedReader.readLine();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        Client client = new Client("localhost", 12345);
+
         try {
-            Client client = new Client("localhost", 12345);
-
+            client.initialize();
             client.sendQuery("Hello!");
-
-            client.disconnect();
-        } catch (IOException e) {
-            e.printStackTrace();
+            client.sendQuery("Goodbye!");
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        } finally {
+            try {
+                client.disconnect();
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
         }
     }
 }
