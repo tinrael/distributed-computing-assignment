@@ -1,0 +1,53 @@
+package ua.knu.csc.core;
+
+import java.sql.SQLException;
+
+public class Manager {
+    private final ActorDAO actorDAO;
+    private final FilmDAO filmDAO;
+    private final FilmActorDAO filmActorDAO;
+
+    public Manager(String url, String user, String password) throws SQLException {
+        actorDAO = new ActorDAO(url, user, password);
+        filmDAO = new FilmDAO(url, user, password);
+        filmActorDAO = new FilmActorDAO(url, user, password);
+    }
+
+    public void stop() throws SQLException {
+        actorDAO.stop();
+        filmDAO.stop();
+        filmActorDAO.stop();
+    }
+
+    public void addActor(int actorId, String forename, String surname) throws SQLException {
+        actorDAO.addActor(actorId, forename, surname);
+    }
+
+    public void updateActor(int actorId, String forename, String surname) throws SQLException {
+        actorDAO.updateActor(actorId, forename, surname);
+    }
+
+    public void deleteActor(int actorId) throws SQLException {
+        actorDAO.deleteActor(actorId);
+    }
+
+    public void addFilm(int filmId, String title, String country, int year) throws SQLException {
+        filmDAO.addFilm(filmId, title, country, year);
+    }
+
+    public void updateFilm(int filmId, String title, String country, int year) throws SQLException {
+        filmDAO.updateFilm(filmId, title, country, year);
+    }
+
+    public void deleteFilm(int filmId) throws SQLException {
+        filmDAO.deleteFilm(filmId);
+    }
+
+    public void addFilmActor(int filmId, int actorId) throws SQLException {
+        filmActorDAO.addFilmActor(filmId, actorId);
+    }
+
+    public void deleteFilmActor(int filmId, int actorId) throws SQLException {
+        filmActorDAO.deleteFilmActor(filmId, actorId);
+    }
+}
