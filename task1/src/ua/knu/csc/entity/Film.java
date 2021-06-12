@@ -1,6 +1,8 @@
 package ua.knu.csc.entity;
 
-public class Film {
+import java.io.Serializable;
+
+public class Film implements Serializable {
     private int filmId;
 
     private String title;

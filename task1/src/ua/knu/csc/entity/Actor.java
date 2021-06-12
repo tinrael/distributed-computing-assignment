@@ -1,6 +1,8 @@
 package ua.knu.csc.entity;
 
-public class Actor {
+import java.io.Serializable;
+
+public class Actor implements Serializable {
     private int actorId;
 
     private String forename;
