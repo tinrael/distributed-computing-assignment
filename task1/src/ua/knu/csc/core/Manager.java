@@ -1,5 +1,8 @@
 package ua.knu.csc.core;
 
+import ua.knu.csc.entity.Actor;
+import ua.knu.csc.entity.Film;
+
 import java.sql.SQLException;
 
 public class Manager {
@@ -23,8 +26,16 @@ public class Manager {
         actorDAO.addActor(actorId, forename, surname);
     }
 
+    public void addActor(Actor actor) throws SQLException {
+        actorDAO.addActor(actor);
+    }
+
     public void updateActor(int actorId, String forename, String surname) throws SQLException {
         actorDAO.updateActor(actorId, forename, surname);
+    }
+
+    public void updateActor(Actor actor) throws SQLException {
+        actorDAO.updateActor(actor);
     }
 
     public void deleteActor(int actorId) throws SQLException {
@@ -35,8 +46,16 @@ public class Manager {
         filmDAO.addFilm(filmId, title, country, year);
     }
 
+    public void addFilm(Film film) throws SQLException {
+        filmDAO.addFilm(film);
+    }
+
     public void updateFilm(int filmId, String title, String country, int year) throws SQLException {
         filmDAO.updateFilm(filmId, title, country, year);
+    }
+
+    public void updateFilm(Film film) throws SQLException {
+        filmDAO.updateFilm(film);
     }
 
     public void deleteFilm(int filmId) throws SQLException {
