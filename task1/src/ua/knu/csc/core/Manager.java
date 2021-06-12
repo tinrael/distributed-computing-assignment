@@ -42,6 +42,10 @@ public class Manager {
         actorDAO.deleteActor(actorId);
     }
 
+    public Actor getActor(int actorId) throws SQLException {
+        return actorDAO.getActor(actorId);
+    }
+
     public void addFilm(int filmId, String title, String country, int year) throws SQLException {
         filmDAO.addFilm(filmId, title, country, year);
     }
@@ -60,6 +64,10 @@ public class Manager {
 
     public void deleteFilm(int filmId) throws SQLException {
         filmDAO.deleteFilm(filmId);
+    }
+
+    public Film getFilm(int filmId) throws SQLException {
+        return filmDAO.getFilm(filmId);
     }
 
     public void addFilmActor(int filmId, int actorId) throws SQLException {
