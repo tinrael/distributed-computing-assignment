@@ -1,5 +1,7 @@
 package ua.knu.csc;
 
+import ua.knu.csc.core.Manager;
+
 import java.net.Socket;
 import java.net.ServerSocket;
 
@@ -8,17 +10,31 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import java.sql.SQLException;
+
 class Handler extends Thread {
-    private Socket socket;
+    private final Socket socket;
 
-    private PrintWriter printWriter;
-    private BufferedReader bufferedReader;
+    private final PrintWriter printWriter;
+    private final BufferedReader bufferedReader;
 
-    public Handler(Socket socket) throws IOException {
+    private final Manager manager;
+
+    public Handler(Socket socket) throws IOException, SQLException {
         this.socket = socket;
 
         bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         printWriter = new PrintWriter(socket.getOutputStream(), true);
+
+        String url = "jdbc:postgresql://localhost/films";
+        String user = "postgres";
+        String password = "postgres";
+
+        manager = new Manager(url, user, password);
+    }
+
+    private String processQuery(String query) {
+        return "";
     }
 
     @Override
@@ -30,7 +46,7 @@ class Handler extends Thread {
                     break;
                 }
 
-                String response = "123" + query + "123";
+                String response = processQuery(query);
 
                 printWriter.println(response);
             }
@@ -47,7 +63,7 @@ class Handler extends Thread {
 }
 
 public class Server {
-    private ServerSocket serverSocket;
+    private final ServerSocket serverSocket;
 
     public Server(int port) throws IOException {
         serverSocket = new ServerSocket(port);
@@ -59,7 +75,7 @@ public class Server {
             try {
                 Handler handler = new Handler(socket);
                 handler.start();
-            } catch (IOException e) {
+            } catch (IOException | SQLException e) {
                 e.printStackTrace();
                 socket.close();
             }
