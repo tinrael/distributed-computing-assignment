@@ -25,6 +25,10 @@ public class FilmDAO {
         statement.executeUpdate(sql);
     }
 
+    public void addFilm(Film film) throws SQLException {
+        addFilm(film.getFilmId(), film.getTitle(), film.getCountry(), film.getYear());
+    }
+
     public void updateFilm(int filmId, String title, String country, int year) throws SQLException {
         String sql = "UPDATE film " +
                 "SET title = '" + title + "', country = '" + country + "', year = " + year + " " +
@@ -35,6 +39,10 @@ public class FilmDAO {
         if (rowsAffectedCount == 0) {
             throw new SQLException("Not found.");
         }
+    }
+
+    public void updateFilm(Film film) throws SQLException {
+        updateFilm(film.getFilmId(), film.getTitle(), film.getCountry(), film.getYear());
     }
 
     public void deleteFilm(int filmId) throws SQLException {
