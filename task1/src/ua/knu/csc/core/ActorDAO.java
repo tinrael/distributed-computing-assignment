@@ -25,6 +25,10 @@ public class ActorDAO {
         statement.executeUpdate(sql);
     }
 
+    public void addActor(Actor actor) throws SQLException {
+        addActor(actor.getActorId(), actor.getForename(), actor.getSurname());
+    }
+
     public void updateActor(int actorId, String forename, String surname) throws SQLException {
         String sql = "UPDATE actor " +
                 "SET forename = '" + forename + "', surname = '" + surname + "' " +
@@ -35,6 +39,10 @@ public class ActorDAO {
         if (rowsAffectedCount == 0) {
             throw new SQLException("Not found.");
         }
+    }
+
+    public void updateActor(Actor actor) throws SQLException {
+        updateActor(actor.getActorId(), actor.getForename(), actor.getSurname());
     }
 
     public void deleteActor(int actorId) throws SQLException {
