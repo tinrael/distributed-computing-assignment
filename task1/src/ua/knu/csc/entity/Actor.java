@@ -31,4 +31,9 @@ public class Actor implements Serializable {
     public void setSurname(String surname) {
         this.surname = surname;
     }
+
+    @Override
+    public String toString() {
+        return "[actorId: " + actorId + ", forename: " + forename + ", surname: " + surname + "]";
+    }
 }
