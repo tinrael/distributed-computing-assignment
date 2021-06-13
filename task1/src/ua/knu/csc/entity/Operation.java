@@ -8,13 +8,13 @@ public enum Operation {
 
     ADD_ACTOR(0),
     UPDATE_ACTOR(1),
-    DELETE_ACTOR(3),
-    GET_ACTOR(4),
+    DELETE_ACTOR(2),
+    GET_ACTOR(3),
 
-    ADD_FILM(5),
-    UPDATE_FILM(6),
-    DELETE_FILM(7),
-    GET_FILM(8);
+    ADD_FILM(4),
+    UPDATE_FILM(5),
+    DELETE_FILM(6),
+    GET_FILM(7);
 
     private static final Map<Integer, Operation> operations = new HashMap<>();
     static {
