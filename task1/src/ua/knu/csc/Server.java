@@ -2,29 +2,33 @@ package ua.knu.csc;
 
 import ua.knu.csc.core.Manager;
 
+import ua.knu.csc.entity.Actor;
+import ua.knu.csc.entity.Operation;
+
 import java.net.Socket;
 import java.net.ServerSocket;
 
-import java.io.PrintWriter;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 import java.sql.SQLException;
 
 class Handler extends Thread {
     private final Socket socket;
 
-    private final PrintWriter printWriter;
-    private final BufferedReader bufferedReader;
+    private final ObjectOutputStream objectOutputStream;
+    private final ObjectInputStream objectInputStream;
 
     private final Manager manager;
+
+    private final int STATUS_CODE_SUCCESS = 0;
 
     public Handler(Socket socket) throws IOException, SQLException {
         this.socket = socket;
 
-        bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        printWriter = new PrintWriter(socket.getOutputStream(), true);
+        objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+        objectInputStream = new ObjectInputStream(socket.getInputStream());
 
         String url = "jdbc:postgresql://localhost/films";
         String user = "postgres";
@@ -33,30 +37,69 @@ class Handler extends Thread {
         manager = new Manager(url, user, password);
     }
 
-    private String processQuery(String query) {
-        return "";
+    private void processQuery(Operation operation) throws IOException, ClassNotFoundException {
+        switch (operation) {
+            case ADD_ACTOR -> {
+                Actor actor = (Actor) objectInputStream.readObject();
+                try {
+                    manager.addActor(actor);
+                    objectOutputStream.writeInt(STATUS_CODE_SUCCESS);
+                } catch (SQLException throwable) {
+                    throwable.printStackTrace();
+                    objectOutputStream.writeInt(-1);
+                }
+            }
+            case UPDATE_ACTOR -> {
+                Actor actor = (Actor) objectInputStream.readObject();
+                try {
+                    manager.updateActor(actor);
+                    objectOutputStream.writeInt(STATUS_CODE_SUCCESS);
+                } catch (SQLException throwable) {
+                    throwable.printStackTrace();
+                    objectOutputStream.writeInt(-1);
+                }
+            }
+            case DELETE_ACTOR -> {
+                int actorId = objectInputStream.readInt();
+                try {
+                    manager.deleteActor(actorId);
+                    objectOutputStream.writeInt(STATUS_CODE_SUCCESS);
+                } catch (SQLException throwable) {
+                    throwable.printStackTrace();
+                    objectOutputStream.writeInt(-1);
+                }
+            }
+            case GET_ACTOR -> {
+                int actorId = objectInputStream.readInt();
+                try {
+                    Actor actor = manager.getActor(actorId);
+                    objectOutputStream.writeInt(STATUS_CODE_SUCCESS);
+                    objectOutputStream.writeObject(actor);
+                } catch (SQLException throwable) {
+                    throwable.printStackTrace();
+                    objectOutputStream.writeInt(-1);
+                }
+            }
+            default -> objectOutputStream.writeInt(-1);
+        }
+        objectOutputStream.flush();
     }
 
     @Override
     public void run() {
         try {
-            while (true) {
-                String query = bufferedReader.readLine();
-                if (query == null) {
-                    break;
-                }
-
-                String response = processQuery(query);
-
-                printWriter.println(response);
+            while (!Thread.interrupted()) {
+                int code = objectInputStream.readInt();
+                Operation operation = Operation.getOperation(code);
+                processQuery(operation);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | ClassNotFoundException exception) {
+            exception.printStackTrace();
         } finally {
             try {
                 socket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException exception) {
+                exception.printStackTrace();
             }
         }
     }
